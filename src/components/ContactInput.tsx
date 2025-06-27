@@ -20,84 +20,77 @@ export const ContactInput: React.FC<ContactInputProps> = ({
     });
   };
 
+  const inputClassName =
+    "w-full px-6 py-4 border-2 border-orange-200 rounded-2xl focus:ring-4 focus:ring-orange-300/50 focus:border-orange-400 transition-all duration-300 bg-gradient-to-r from-white to-orange-50/30 text-lg font-medium placeholder-slate-400 shadow-lg focus:shadow-xl transform focus:scale-102";
+  const labelClassName =
+    "block text-lg font-bold text-slate-700 mb-3 tracking-wide";
+
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("firstName")}
-          </label>
+          <label className={labelClassName}>{t("firstName")}</label>
           <input
             type="text"
             value={contactInfo.firstName}
             onChange={(e) => handleChange("firstName", e.target.value)}
             placeholder={t("firstNamePlaceholder")}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+            className={inputClassName}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t("lastName")}
-          </label>
+          <label className={labelClassName}>{t("lastName")}</label>
           <input
             type="text"
             value={contactInfo.lastName}
             onChange={(e) => handleChange("lastName", e.target.value)}
             placeholder={t("lastNamePlaceholder")}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+            className={inputClassName}
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t("phoneNumber")}
-        </label>
+        <label className={labelClassName}>{t("phoneNumber")}</label>
         <input
           type="tel"
           value={contactInfo.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
           placeholder={t("phonePlaceholder")}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          className={inputClassName}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t("emailAddress")}
-        </label>
+        <label className={labelClassName}>{t("emailAddress")}</label>
         <input
           type="email"
           value={contactInfo.email}
           onChange={(e) => handleChange("email", e.target.value)}
           placeholder={t("emailPlaceholder")}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          className={inputClassName}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t("organization")}
-        </label>
+        <label className={labelClassName}>{t("organization")}</label>
         <input
           type="text"
           value={contactInfo.organization}
           onChange={(e) => handleChange("organization", e.target.value)}
           placeholder={t("organizationPlaceholder")}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          className={inputClassName}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {t("website")}
-        </label>
+        <label className={labelClassName}>{t("website")}</label>
         <input
           type="url"
           value={contactInfo.url}
           onChange={(e) => handleChange("url", e.target.value)}
           placeholder={t("websitePlaceholder")}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          className={inputClassName}
         />
       </div>
     </div>

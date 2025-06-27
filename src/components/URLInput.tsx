@@ -11,7 +11,7 @@ export const URLInput: React.FC<URLInputProps> = ({ value, onChange }) => {
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-lg font-bold text-slate-700 mb-4 tracking-wide">
         {t("websiteUrl")}
       </label>
       <input
@@ -19,9 +19,9 @@ export const URLInput: React.FC<URLInputProps> = ({ value, onChange }) => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={t("urlPlaceholder")}
-        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+        className="w-full px-6 py-4 border-2 border-orange-200 rounded-2xl focus:ring-4 focus:ring-orange-300/50 focus:border-orange-400 transition-all duration-300 bg-gradient-to-r from-white to-orange-50/30 text-lg font-medium placeholder-slate-400 shadow-lg focus:shadow-xl transform focus:scale-102"
       />
-      <p className="text-xs text-gray-500 mt-1">{t("urlHelp")}</p>
+      <p className="text-sm text-slate-600 mt-3 font-medium">{t("urlHelp")}</p>
     </div>
   );
 };

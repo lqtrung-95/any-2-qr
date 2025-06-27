@@ -2,7 +2,7 @@ import { Translations } from "../types";
 
 export const TRANSLATIONS: Translations = {
   "en-US": {
-    appTitle: "QR Code Generator",
+    appTitle: "Any-2-QR",
     appDescription: "Generate QR codes for URLs, text, and contact information",
     urlTab: "URL",
     textTab: "Text",

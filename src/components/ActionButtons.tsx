@@ -29,27 +29,27 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   if (!qrData) return null;
 
   return (
-    <div className="flex gap-4 w-full max-w-sm">
+    <div className="flex gap-6 w-full max-w-md">
       <button
         onClick={onDownload}
-        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 font-medium shadow-lg"
+        className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white rounded-2xl hover:from-rose-600 hover:via-orange-600 hover:to-amber-600 transition-all duration-300 font-bold text-lg shadow-2xl hover:shadow-orange-300/50 transform hover:-translate-y-1 hover:scale-105"
       >
-        <Download className="w-4 h-4" />
+        <Download className="w-5 h-5 drop-shadow-sm" />
         {t("download")}
       </button>
 
       <button
         onClick={handleCopy}
-        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium"
+        className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-200 to-slate-300 text-slate-700 rounded-2xl hover:from-slate-300 hover:to-slate-400 transition-all duration-300 font-bold text-lg shadow-xl hover:shadow-slate-300/50 transform hover:-translate-y-1 hover:scale-105"
       >
         {copied ? (
           <>
-            <Check className="w-4 h-4 text-green-600" />
-            {t("copied")}
+            <Check className="w-5 h-5 text-emerald-600 drop-shadow-sm" />
+            <span className="text-emerald-600">{t("copied")}</span>
           </>
         ) : (
           <>
-            <Copy className="w-4 h-4" />
+            <Copy className="w-5 h-5 drop-shadow-sm" />
             {t("copyData")}
           </>
         )}

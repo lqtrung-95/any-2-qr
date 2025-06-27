@@ -104,30 +104,46 @@ const QRCodeGenerator: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl mb-4">
-            <QrCode className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-orange-50 to-amber-100 p-6 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-r from-rose-100/30 to-amber-100/30"></div>
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="w-4 h-4 bg-rose-300/20 rounded-full absolute top-20 left-20 animate-pulse"></div>
+          <div className="w-6 h-6 bg-orange-300/20 rounded-full absolute top-40 right-32 animate-pulse delay-1000"></div>
+          <div className="w-3 h-3 bg-amber-300/20 rounded-full absolute bottom-32 left-40 animate-pulse delay-2000"></div>
+          <div className="w-5 h-5 bg-rose-300/20 rounded-full absolute bottom-20 right-20 animate-pulse delay-500"></div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-rose-500 via-orange-500 to-amber-500 rounded-[1.5rem] mb-8 shadow-2xl shadow-orange-200/50 transform hover:scale-110 hover:rotate-3 transition-all duration-500">
+            <QrCode className="w-12 h-12 text-white drop-shadow-lg" />
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-7xl lg:text-8xl font-black bg-gradient-to-r from-rose-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-6 tracking-tighter leading-none">
             {t("appTitle")}
           </h1>
-          <p className="text-gray-600 text-lg">{t("appDescription")}</p>
+          <p className="text-slate-700 text-2xl font-semibold max-w-3xl mx-auto leading-relaxed drop-shadow-sm">
+            {t("appDescription")}
+          </p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl shadow-orange-200/30 overflow-hidden border-2 border-white/50 relative">
+          {/* Glassmorphism overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
+
           <TabNavigation
             tabs={tabs}
             activeTab={activeTab}
             onTabChange={setActiveTab}
           />
 
-          <div className="p-8">
-            <div className="grid lg:grid-cols-2 gap-8">
+          <div className="p-10 lg:p-12">
+            <div className="grid lg:grid-cols-2 gap-12">
               {/* Input Section */}
-              <div className="space-y-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              <div className="space-y-8">
+                <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
                   {activeTab === "url" && t("enterUrl")}
                   {activeTab === "text" && t("enterText")}
                   {activeTab === "contact" && t("contactInformation")}
@@ -137,7 +153,7 @@ const QRCodeGenerator: React.FC = () => {
 
                 <button
                   onClick={resetForm}
-                  className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium"
+                  className="w-full px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-2xl hover:from-slate-200 hover:to-slate-300 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                   {t("clearAllFields")}
                 </button>
@@ -149,7 +165,7 @@ const QRCodeGenerator: React.FC = () => {
                   qrData={qrData}
                   qrContainerRef={qrContainerRef}
                 />
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-8">
                   <ActionButtons
                     qrData={qrData}
                     onDownload={handleDownload}
@@ -161,8 +177,8 @@ const QRCodeGenerator: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-center mt-8 text-gray-500 text-sm">
-          <p>{t("footerText")}</p>
+        <div className="text-center mt-16 text-slate-600 text-lg">
+          <p className="font-semibold drop-shadow-sm">{t("footerText")}</p>
         </div>
       </div>
     </div>
