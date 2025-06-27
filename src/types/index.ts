@@ -53,10 +53,28 @@ export interface Translation {
   qrCodeData: string;
   footerText: string;
   qrCodeAlt: string;
+  customization: string;
+  foregroundColor: string;
+  backgroundColor: string;
+  addLogo: string;
+  logoSize: string;
+  uploadLogo: string;
+  removeLogo: string;
+  colorAndLogo: string;
+  customizeQR: string;
+  hideCustomization: string;
+  showCustomization: string;
 }
 
 export type Locale = "en-US" | "es-ES";
 
 export interface Translations {
   [key: string]: Translation;
+}
+
+export interface QRCustomization {
+  foregroundColor: string;
+  backgroundColor: string;
+  logoFile: File | null;
+  logoSize: number; // percentage of QR code size
 }

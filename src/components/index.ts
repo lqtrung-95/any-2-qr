@@ -5,3 +5,4 @@ export { TextInput } from "./TextInput";
 export { ContactInput } from "./ContactInput";
 export { QRCodeDisplay } from "./QRCodeDisplay";
 export { ActionButtons } from "./ActionButtons";
+export { QRCustomizationComponent } from "./QRCustomization";

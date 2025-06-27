@@ -4,11 +4,16 @@ import {
   createQRCanvas,
   createFallbackQRImage,
 } from "../utils/qrUtils";
+import { QRCustomization } from "../types";
 
 export const useQRCode = () => {
   const qrContainerRef = useRef<HTMLDivElement>(null);
 
-  const generateQRCode = async (text: string, altText: string = "QR Code") => {
+  const generateQRCode = async (
+    text: string,
+    altText: string = "QR Code",
+    customization?: QRCustomization
+  ) => {
     if (!text.trim()) {
       if (qrContainerRef.current) {
         qrContainerRef.current.innerHTML = "";
@@ -20,7 +25,14 @@ export const useQRCode = () => {
 
     try {
       await loadQRiousLibrary();
-      createQRCanvas(qrContainerRef.current, text);
+      createQRCanvas(
+        qrContainerRef.current,
+        text,
+        customization?.foregroundColor,
+        customization?.backgroundColor,
+        customization?.logoFile,
+        customization?.logoSize
+      );
     } catch (error) {
       console.error("Error loading QR library:", error);
       // Fallback to external APIs

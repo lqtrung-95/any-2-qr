@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { QrCode, Link, MessageSquare, User } from "lucide-react";
+import {
+  QrCode,
+  Link,
+  MessageSquare,
+  User,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { TabNavigation } from "./TabNavigation";
 import { URLInput } from "./URLInput";
 import { TextInput } from "./TextInput";
 import { ContactInput } from "./ContactInput";
 import { QRCodeDisplay } from "./QRCodeDisplay";
 import { ActionButtons } from "./ActionButtons";
+import { QRCustomizationComponent } from "./QRCustomization";
 import { useTranslation } from "../hooks/useTranslation";
 import { useQRCode } from "../hooks/useQRCode";
 import { formatUrl, generateVCard } from "../utils/qrUtils";
-import { ContactInfo, Tab, TabType } from "../types";
+import { ContactInfo, Tab, TabType, QRCustomization } from "../types";
 
 const QRCodeGenerator: React.FC = () => {
   const { t } = useTranslation();
@@ -20,6 +29,7 @@ const QRCodeGenerator: React.FC = () => {
   const [qrData, setQrData] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [textInput, setTextInput] = useState("");
+  const [isCustomizationOpen, setIsCustomizationOpen] = useState(true);
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     firstName: "",
     lastName: "",
@@ -27,6 +37,12 @@ const QRCodeGenerator: React.FC = () => {
     email: "",
     organization: "",
     url: "",
+  });
+  const [customization, setCustomization] = useState<QRCustomization>({
+    foregroundColor: "#000000",
+    backgroundColor: "#ffffff",
+    logoFile: null,
+    logoSize: 20,
   });
 
   const tabs: Tab[] = [
@@ -60,8 +76,16 @@ const QRCodeGenerator: React.FC = () => {
     }
 
     setQrData(data);
-    generateQRCode(data, t("qrCodeAlt"));
-  }, [activeTab, urlInput, textInput, contactInfo, generateQRCode, t]);
+    generateQRCode(data, t("qrCodeAlt"), customization);
+  }, [
+    activeTab,
+    urlInput,
+    textInput,
+    contactInfo,
+    customization,
+    generateQRCode,
+    t,
+  ]);
 
   const handleDownload = () => {
     downloadQRCode(`qr-code-${activeTab}`);
@@ -83,6 +107,12 @@ const QRCodeGenerator: React.FC = () => {
       email: "",
       organization: "",
       url: "",
+    });
+    setCustomization({
+      foregroundColor: "#000000",
+      backgroundColor: "#ffffff",
+      logoFile: null,
+      logoSize: 20,
     });
     setQrData("");
     clearQRCode();
@@ -140,39 +170,100 @@ const QRCodeGenerator: React.FC = () => {
           />
 
           <div className="p-10 lg:p-12">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Input Section */}
-              <div className="space-y-8">
-                <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
-                  {activeTab === "url" && t("enterUrl")}
-                  {activeTab === "text" && t("enterText")}
-                  {activeTab === "contact" && t("contactInformation")}
-                </h2>
+            <div className="flex gap-8">
+              {/* Main Content Area */}
+              <div
+                className={`flex-1 transition-all duration-300 ${
+                  isCustomizationOpen ? "lg:mr-80" : ""
+                }`}
+              >
+                <div className="grid lg:grid-cols-2 gap-12">
+                  {/* Input Section */}
+                  <div className="space-y-8">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
+                        {activeTab === "url" && t("enterUrl")}
+                        {activeTab === "text" && t("enterText")}
+                        {activeTab === "contact" && t("contactInformation")}
+                      </h2>
 
-                {renderTabContent()}
+                      {/* Customization Toggle */}
+                      <button
+                        onClick={() =>
+                          setIsCustomizationOpen(!isCustomizationOpen)
+                        }
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 rounded-xl hover:from-orange-200 hover:to-amber-200 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span className="text-sm">{t("customizeQR")}</span>
+                        {isCustomizationOpen ? (
+                          <ChevronRight className="w-4 h-4" />
+                        ) : (
+                          <ChevronLeft className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
 
-                <button
-                  onClick={resetForm}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-2xl hover:from-slate-200 hover:to-slate-300 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                  {t("clearAllFields")}
-                </button>
+                    {renderTabContent()}
+
+                    <button
+                      onClick={resetForm}
+                      className="w-full px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-2xl hover:from-slate-200 hover:to-slate-300 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      {t("clearAllFields")}
+                    </button>
+                  </div>
+
+                  {/* QR Code Display Section */}
+                  <div>
+                    <QRCodeDisplay
+                      qrData={qrData}
+                      qrContainerRef={qrContainerRef}
+                    />
+                    <div className="flex justify-center mt-8">
+                      <ActionButtons
+                        qrData={qrData}
+                        onDownload={handleDownload}
+                        onCopy={handleCopy}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* QR Code Display Section */}
-              <div>
-                <QRCodeDisplay
-                  qrData={qrData}
-                  qrContainerRef={qrContainerRef}
-                />
-                <div className="flex justify-center mt-8">
-                  <ActionButtons
-                    qrData={qrData}
-                    onDownload={handleDownload}
-                    onCopy={handleCopy}
+              {/* Collapsible Customization Panel */}
+              <div
+                className={`fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-lg border-l-2 border-orange-100/50 shadow-2xl transform transition-all duration-300 z-50 ${
+                  isCustomizationOpen ? "translate-x-0" : "translate-x-full"
+                }`}
+              >
+                <div className="p-6 h-full overflow-y-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold text-slate-800 tracking-tight">
+                      {t("customization")}
+                    </h3>
+                    <button
+                      onClick={() => setIsCustomizationOpen(false)}
+                      className="p-2 rounded-lg hover:bg-orange-100 transition-colors"
+                    >
+                      <ChevronRight className="w-5 h-5 text-slate-600" />
+                    </button>
+                  </div>
+
+                  <QRCustomizationComponent
+                    customization={customization}
+                    onChange={setCustomization}
                   />
                 </div>
               </div>
+
+              {/* Overlay when panel is open on mobile */}
+              {isCustomizationOpen && (
+                <div
+                  className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+                  onClick={() => setIsCustomizationOpen(false)}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -45,7 +45,14 @@ export const loadQRiousLibrary = (): Promise<void> => {
   });
 };
 
-export const createQRCanvas = (container: HTMLElement, text: string): void => {
+export const createQRCanvas = (
+  container: HTMLElement,
+  text: string,
+  foregroundColor: string = "black",
+  backgroundColor: string = "white",
+  logoFile?: File | null,
+  logoSize: number = 20
+): void => {
   try {
     // Clear previous QR code
     container.innerHTML = "";
@@ -55,14 +62,19 @@ export const createQRCanvas = (container: HTMLElement, text: string): void => {
     container.appendChild(canvas);
 
     // Generate QR code
-    const qr = new window.QRious({
+    new window.QRious({
       element: canvas,
       value: text,
       size: 300,
-      background: "white",
-      foreground: "black",
-      level: "M",
+      background: backgroundColor,
+      foreground: foregroundColor,
+      level: "H", // Higher error correction for logo overlay
     });
+
+    // Add logo if provided
+    if (logoFile) {
+      addLogoToCanvas(canvas, logoFile, logoSize);
+    }
 
     // Style the canvas
     canvas.className = "w-full h-auto rounded-xl shadow-lg bg-white";
@@ -72,6 +84,40 @@ export const createQRCanvas = (container: HTMLElement, text: string): void => {
     console.error("Error creating QR code:", error);
     throw error;
   }
+};
+
+export const addLogoToCanvas = (
+  canvas: HTMLCanvasElement,
+  logoFile: File,
+  logoSize: number
+): void => {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const img = new Image();
+  img.onload = () => {
+    const canvasSize = canvas.width;
+    const logoSizePx = (canvasSize * logoSize) / 100;
+    const x = (canvasSize - logoSizePx) / 2;
+    const y = (canvasSize - logoSizePx) / 2;
+
+    // Create a white background circle for the logo
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(
+      canvasSize / 2,
+      canvasSize / 2,
+      logoSizePx / 2 + 10,
+      0,
+      2 * Math.PI
+    );
+    ctx.fill();
+
+    // Draw the logo
+    ctx.drawImage(img, x, y, logoSizePx, logoSizePx);
+  };
+
+  img.src = URL.createObjectURL(logoFile);
 };
 
 export const createFallbackQRImage = (
