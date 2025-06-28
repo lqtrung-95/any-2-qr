@@ -61,15 +61,19 @@ export const createQRCanvas = (
     const canvas = document.createElement("canvas");
     container.appendChild(canvas);
 
-    // Generate QR code
+    // Generate QR code with higher resolution for better quality
     new window.QRious({
       element: canvas,
       value: text,
-      size: 300,
+      size: 600, // Doubled size for higher resolution
       background: backgroundColor,
       foreground: foregroundColor,
       level: "H", // Higher error correction for logo overlay
     });
+
+    // Set display size to maintain consistency
+    canvas.style.width = "300px";
+    canvas.style.height = "300px";
 
     // Add logo if provided
     if (logoFile) {
@@ -94,12 +98,37 @@ export const addLogoToCanvas = (
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+  // Enable image smoothing for better quality
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
   const img = new Image();
   img.onload = () => {
     const canvasSize = canvas.width;
     const logoSizePx = (canvasSize * logoSize) / 100;
     const x = (canvasSize - logoSizePx) / 2;
     const y = (canvasSize - logoSizePx) / 2;
+
+    // Create a temporary canvas for logo processing
+    const logoCanvas = document.createElement("canvas");
+    logoCanvas.width = logoSizePx;
+    logoCanvas.height = logoSizePx;
+    const logoCtx = logoCanvas.getContext("2d");
+
+    if (!logoCtx) return;
+
+    // Enable high quality image processing
+    logoCtx.imageSmoothingEnabled = true;
+    logoCtx.imageSmoothingQuality = "high";
+
+    // Create circular clipping path for the logo
+    logoCtx.beginPath();
+    logoCtx.arc(logoSizePx / 2, logoSizePx / 2, logoSizePx / 2, 0, Math.PI * 2);
+    logoCtx.closePath();
+    logoCtx.clip();
+
+    // Draw the image with proper scaling
+    logoCtx.drawImage(img, 0, 0, logoSizePx, logoSizePx);
 
     // Create a white background circle for the logo
     ctx.fillStyle = "#ffffff";
@@ -113,10 +142,12 @@ export const addLogoToCanvas = (
     );
     ctx.fill();
 
-    // Draw the logo
-    ctx.drawImage(img, x, y, logoSizePx, logoSizePx);
+    // Draw the processed logo
+    ctx.drawImage(logoCanvas, x, y);
   };
 
+  // Set crossOrigin to anonymous to prevent tainted canvas issues
+  img.crossOrigin = "anonymous";
   img.src = URL.createObjectURL(logoFile);
 };
 

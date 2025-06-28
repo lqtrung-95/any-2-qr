@@ -47,10 +47,12 @@ export const useQRCode = () => {
     const img = qrContainerRef.current.querySelector("img");
 
     if (canvas) {
-      // Download from canvas
+      // Download from canvas with high quality
       const link = document.createElement("a");
       link.download = `${filename}.png`;
-      link.href = canvas.toDataURL();
+
+      // Use higher quality PNG export
+      link.href = canvas.toDataURL("image/png", 1.0);
       link.click();
     } else if (img) {
       // Download from image
