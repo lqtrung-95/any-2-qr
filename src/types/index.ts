@@ -65,6 +65,10 @@ export interface Translation {
   hideCustomization: string;
   showCustomization: string;
   generatedQRCode: string;
+  share: string;
+  shareQR: string;
+  shareSuccess: string;
+  shareError: string;
 }
 
 export type Locale = "en-US" | "es-ES";

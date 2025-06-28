@@ -50,6 +50,10 @@ export const TRANSLATIONS: Translations = {
     hideCustomization: "Hide Customization",
     showCustomization: "Show Customization",
     generatedQRCode: "Generated QR Code",
+    share: "Share",
+    shareQR: "Share QR Code",
+    shareSuccess: "QR code shared successfully!",
+    shareError: "Unable to share. QR code copied to clipboard instead.",
   },
   "es-ES": {
     appTitle: "Generador de Códigos QR",
@@ -102,5 +106,9 @@ export const TRANSLATIONS: Translations = {
     hideCustomization: "Ocultar Personalización",
     showCustomization: "Mostrar Personalización",
     generatedQRCode: "Código QR Generado",
+    share: "Compartir",
+    shareQR: "Compartir Código QR",
+    shareSuccess: "¡Código QR compartido exitosamente!",
+    shareError: "No se pudo compartir. Código QR copiado al portapapeles.",
   },
 };

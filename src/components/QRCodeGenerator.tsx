@@ -97,6 +97,64 @@ const QRCodeGenerator: React.FC = () => {
     }
   };
 
+  const handleShare = async (): Promise<void> => {
+    if (!qrData) return;
+
+    try {
+      // Try to get the QR code canvas as a blob
+      const canvas = qrContainerRef.current?.querySelector("canvas");
+      if (canvas && navigator.share) {
+        canvas.toBlob(async (blob) => {
+          try {
+            if (blob && navigator.canShare) {
+              const file = new File([blob], `qr-code-${activeTab}.png`, {
+                type: "image/png",
+              });
+
+              const shareData = {
+                title: t("shareQR"),
+                text: `${t("shareQR")}: ${qrData}`,
+                files: [file],
+              };
+
+              // Check if we can share files
+              if (navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+                return;
+              }
+            }
+
+            // Fallback to sharing just text if file sharing isn't supported
+            await navigator.share({
+              title: t("shareQR"),
+              text: qrData,
+            });
+          } catch (shareError: any) {
+            // Don't throw error if user just canceled the share
+            if (shareError.name === "AbortError") {
+              return; // User canceled, this is normal
+            }
+            // For other errors, fallback to clipboard
+            await navigator.clipboard.writeText(qrData);
+            throw new Error(t("shareError"));
+          }
+        }, "image/png");
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(qrData);
+        throw new Error(t("shareError"));
+      }
+    } catch (error: any) {
+      // Don't show error if user just canceled
+      if (error.name === "AbortError") {
+        return;
+      }
+      // Final fallback: copy to clipboard
+      await navigator.clipboard.writeText(qrData);
+      throw new Error(t("shareError"));
+    }
+  };
+
   const resetForm = () => {
     setUrlInput("");
     setTextInput("");
@@ -269,8 +327,10 @@ const QRCodeGenerator: React.FC = () => {
                     <div className="flex justify-center mt-8">
                       <ActionButtons
                         qrData={qrData}
+                        qrContainerRef={qrContainerRef}
                         onDownload={handleDownload}
                         onCopy={handleCopy}
+                        onNativeShare={handleShare}
                       />
                     </div>
                   </div>

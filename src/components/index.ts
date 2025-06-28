@@ -6,3 +6,4 @@ export { ContactInput } from "./ContactInput";
 export { QRCodeDisplay } from "./QRCodeDisplay";
 export { ActionButtons } from "./ActionButtons";
 export { QRCustomizationComponent } from "./QRCustomization";
+export { SocialShare } from "./SocialShare";
