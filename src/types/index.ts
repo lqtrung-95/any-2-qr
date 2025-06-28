@@ -73,7 +73,7 @@ export interface Translation {
   colorPresets: string;
 }
 
-export type Locale = "en-US" | "es-ES";
+export type Locale = "en-US" | "es-ES" | "zh-CN";
 
 export interface Translations {
   [key: string]: Translation;

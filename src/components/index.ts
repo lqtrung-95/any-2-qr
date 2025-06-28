@@ -7,3 +7,4 @@ export { QRCodeDisplay } from "./QRCodeDisplay";
 export { ActionButtons } from "./ActionButtons";
 export { QRCustomizationComponent } from "./QRCustomization";
 export { SocialShare } from "./SocialShare";
+export { default as LanguageSelector } from "./LanguageSelector";

@@ -21,6 +21,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import { useQRCode } from "../hooks/useQRCode";
 import { formatUrl, generateVCard } from "../utils/qrUtils";
 import { ContactInfo, Tab, TabType, QRCustomization } from "../types";
+import LanguageSelector from "./LanguageSelector";
 
 const QRCodeGenerator: React.FC = () => {
   const { t } = useTranslation();
@@ -89,14 +90,22 @@ const QRCodeGenerator: React.FC = () => {
             setTextInput(data);
           } else if (type === "contact") {
             // Simplistic vCard parsing - assumes specific order/format
-            const lines = data.split('\n');
-            const contact: ContactInfo = { firstName: '', lastName: '', phone: '', email: '', organization: '', url: '' };
+            const lines = data.split("\n");
+            const contact: ContactInfo = {
+              firstName: "",
+              lastName: "",
+              phone: "",
+              email: "",
+              organization: "",
+              url: "",
+            };
             lines.forEach((line: string) => {
-              if (line.startsWith('FN:')) contact.firstName = line.substring(3);
-              if (line.startsWith('TEL:')) contact.phone = line.substring(4);
-              if (line.startsWith('EMAIL:')) contact.email = line.substring(6);
-              if (line.startsWith('ORG:')) contact.organization = line.substring(4);
-              if (line.startsWith('URL:')) contact.url = line.substring(4);
+              if (line.startsWith("FN:")) contact.firstName = line.substring(3);
+              if (line.startsWith("TEL:")) contact.phone = line.substring(4);
+              if (line.startsWith("EMAIL:")) contact.email = line.substring(6);
+              if (line.startsWith("ORG:"))
+                contact.organization = line.substring(4);
+              if (line.startsWith("URL:")) contact.url = line.substring(4);
             });
             setContactInfo(contact);
           }
@@ -290,6 +299,9 @@ const QRCodeGenerator: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
+        <div className="absolute top-4 right-4 z-20 md:top-6 md:right-6">
+          <LanguageSelector />
+        </div>
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-rose-500 via-orange-500 to-amber-500 rounded-[1rem] sm:rounded-[1.25rem] md:rounded-[1.5rem] mb-4 sm:mb-6 md:mb-8 shadow-xl sm:shadow-2xl shadow-orange-200/50 transform hover:scale-110 hover:rotate-3 transition-all duration-500">
             <QrCode className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white drop-shadow-lg" />
