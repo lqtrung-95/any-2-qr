@@ -91,80 +91,6 @@ export const SocialShare: React.FC<SocialShareProps> = ({
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
   };
 
-  const shareToMessenger = async () => {
-    const shareText = `Check out this QR code: ${qrData}`;
-
-    // Check if we're on mobile
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-
-    if (isMobile) {
-      // On mobile, try to open Messenger app with a universal approach
-      try {
-        // Try the fb-messenger protocol
-        window.location.href = `fb-messenger://share/?text=${encodeURIComponent(
-          shareText
-        )}`;
-
-        // Set a timeout to provide feedback if the app doesn't open
-        setTimeout(() => {
-          // Copy to clipboard as backup
-          navigator.clipboard.writeText(shareText);
-          // Don't show alert immediately as the app might be opening
-        }, 1500);
-      } catch (error) {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(shareText);
-        alert("Messenger app not available. QR code data copied to clipboard!");
-      }
-    } else {
-      // On desktop, copy to clipboard and provide instructions
-      try {
-        await navigator.clipboard.writeText(shareText);
-        alert(
-          "QR code data copied to clipboard! Open Messenger on your device and paste to share."
-        );
-      } catch (error) {
-        // Fallback if clipboard fails
-        prompt("Copy this text to share in Messenger:", shareText);
-      }
-    }
-  };
-
-  const shareToWeChat = async () => {
-    // WeChat sharing requires special handling due to their closed ecosystem
-    const shareText = `Check out this QR code: ${qrData}`;
-
-    try {
-      // First, try to copy text to clipboard
-      await navigator.clipboard.writeText(shareText);
-
-      // Then download the QR image
-      const imageDataUrl = getQRImageDataUrl();
-      if (imageDataUrl) {
-        downloadQRImage();
-        alert(
-          "✅ QR code image downloaded and text copied to clipboard!\n\nTo share in WeChat:\n1. Open WeChat\n2. Go to a chat\n3. Tap the + button\n4. Select 'Photo' and choose the downloaded QR image\n5. Or paste the copied text"
-        );
-      } else {
-        alert(
-          "✅ QR code data copied to clipboard!\n\nTo share in WeChat:\n1. Open WeChat\n2. Go to a chat\n3. Paste the copied text"
-        );
-      }
-    } catch (error) {
-      // Fallback if clipboard fails
-      const imageDataUrl = getQRImageDataUrl();
-      if (imageDataUrl) {
-        downloadQRImage();
-        alert("QR code image downloaded! Share it manually in WeChat.");
-      } else {
-        prompt("Copy this text to share in WeChat:", shareText);
-      }
-    }
-  };
-
   const shareViaWebShare = async () => {
     if (navigator.share && navigator.canShare) {
       const canvas = qrContainerRef.current?.querySelector("canvas");
@@ -215,7 +141,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
             className="w-full flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 mb-4"
           >
             <Share2 className="w-5 h-5" />
-            Share with Image (Native)
+            Share with Image
           </button>
         )}
 
@@ -236,26 +162,6 @@ export const SocialShare: React.FC<SocialShareProps> = ({
           >
             <Send className="w-4 h-4" />
             Telegram
-          </button>
-
-          {/* Messenger */}
-          <button
-            onClick={shareToMessenger}
-            className="flex items-center gap-2 p-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 text-sm"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Messenger
-          </button>
-
-          {/* WeChat */}
-          <button
-            onClick={shareToWeChat}
-            className="flex items-center gap-2 p-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 text-sm"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 4.882-1.900 7.52-.336.016-.257.016-.514.016-.773C17.955 5.476 14.063 2.188 9.264 2.188" />
-            </svg>
-            WeChat
           </button>
 
           {/* Email */}

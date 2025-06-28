@@ -31,7 +31,7 @@ const QRCodeGenerator: React.FC = () => {
   const [qrData, setQrData] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [isCustomizationOpen, setIsCustomizationOpen] = useState(true);
+  const [isCustomizationOpen, setIsCustomizationOpen] = useState(false);
 
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     firstName: "",
@@ -47,6 +47,28 @@ const QRCodeGenerator: React.FC = () => {
     logoFile: null,
     logoSize: 20,
   });
+
+  // Device detection
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileDevice =
+        /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+          userAgent
+        );
+      const isTouchDevice =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+
+      setIsMobile(isMobileDevice || (isTouchDevice && isSmallScreen));
+    };
+
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
 
   const tabs: Tab[] = [
     { id: "url", label: t("urlTab"), icon: Link },
@@ -103,58 +125,63 @@ const QRCodeGenerator: React.FC = () => {
   const handleShare = async (): Promise<void> => {
     if (!qrData) return;
 
-    try {
-      // Try to get the QR code canvas as a blob
-      const canvas = qrContainerRef.current?.querySelector("canvas");
-      if (canvas && navigator.share) {
-        canvas.toBlob(async (blob) => {
-          try {
-            if (blob && navigator.canShare) {
-              const file = new File([blob], `qr-code-${activeTab}.png`, {
-                type: "image/png",
-              });
+    // On mobile devices, use native share with image
+    if (isMobile && navigator.share) {
+      try {
+        const canvas = qrContainerRef.current?.querySelector("canvas");
+        if (canvas) {
+          canvas.toBlob(async (blob) => {
+            try {
+              if (blob && navigator.canShare) {
+                const file = new File([blob], `qr-code-${activeTab}.png`, {
+                  type: "image/png",
+                });
 
-              const shareData = {
-                title: t("shareQR"),
-                text: `${t("shareQR")}: ${qrData}`,
-                files: [file],
-              };
+                const shareData = {
+                  title: t("shareQR"),
+                  text: `${t("shareQR")}: ${qrData}`,
+                  files: [file],
+                };
 
-              // Check if we can share files
-              if (navigator.canShare(shareData)) {
-                await navigator.share(shareData);
-                return;
+                // Check if we can share files
+                if (navigator.canShare(shareData)) {
+                  await navigator.share(shareData);
+                  return;
+                }
               }
-            }
 
-            // Fallback to sharing just text if file sharing isn't supported
-            await navigator.share({
-              title: t("shareQR"),
-              text: qrData,
-            });
-          } catch (shareError: any) {
-            // Don't throw error if user just canceled the share
-            if (shareError.name === "AbortError") {
-              return; // User canceled, this is normal
+              // Fallback to sharing just text if file sharing isn't supported
+              await navigator.share({
+                title: t("shareQR"),
+                text: qrData,
+              });
+            } catch (shareError: any) {
+              // Don't throw error if user just canceled the share
+              if (shareError.name === "AbortError") {
+                return; // User canceled, this is normal
+              }
+              // For other errors, fallback to clipboard
+              await navigator.clipboard.writeText(qrData);
             }
-            // For other errors, fallback to clipboard
-            await navigator.clipboard.writeText(qrData);
-            throw new Error(t("shareError"));
-          }
-        }, "image/png");
-      } else {
-        // Fallback: copy to clipboard
+          }, "image/png");
+        } else {
+          // No canvas, share text only
+          await navigator.share({
+            title: t("shareQR"),
+            text: qrData,
+          });
+        }
+      } catch (error: any) {
+        // Don't show error if user just canceled
+        if (error.name === "AbortError") {
+          return;
+        }
+        // Final fallback: copy to clipboard
         await navigator.clipboard.writeText(qrData);
-        throw new Error(t("shareError"));
       }
-    } catch (error: any) {
-      // Don't show error if user just canceled
-      if (error.name === "AbortError") {
-        return;
-      }
-      // Final fallback: copy to clipboard
+    } else {
+      // On desktop, just copy to clipboard
       await navigator.clipboard.writeText(qrData);
-      throw new Error(t("shareError"));
     }
   };
 
@@ -337,6 +364,7 @@ const QRCodeGenerator: React.FC = () => {
                         onDownload={handleDownload}
                         onCopy={handleCopy}
                         onNativeShare={handleShare}
+                        isMobile={isMobile}
                       />
                     </div>
                   </div>

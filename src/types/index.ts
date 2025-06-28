@@ -66,6 +66,7 @@ export interface Translation {
   showCustomization: string;
   generatedQRCode: string;
   share: string;
+  shareNative: string;
   shareQR: string;
   shareSuccess: string;
   shareError: string;

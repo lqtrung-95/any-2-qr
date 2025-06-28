@@ -9,6 +9,7 @@ interface ActionButtonsProps {
   onDownload: () => void;
   onCopy: () => Promise<void>;
   onNativeShare: () => Promise<void>;
+  isMobile: boolean;
 }
 
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -17,6 +18,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onDownload,
   onCopy,
   onNativeShare,
+  isMobile,
 }) => {
   const { t } = useTranslation();
   const [showSocialShare, setShowSocialShare] = useState(false);
@@ -25,13 +27,16 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   return (
     <>
-      <SocialShare
-        qrData={qrData}
-        qrContainerRef={qrContainerRef}
-        isOpen={showSocialShare}
-        onClose={() => setShowSocialShare(false)}
-        onCopy={onCopy}
-      />
+      {/* Show social share modal only on desktop */}
+      {!isMobile && (
+        <SocialShare
+          qrData={qrData}
+          qrContainerRef={qrContainerRef}
+          isOpen={showSocialShare}
+          onClose={() => setShowSocialShare(false)}
+          onCopy={onCopy}
+        />
+      )}
       <div className="flex gap-4 w-full max-w-sm">
         <button
           onClick={onDownload}
@@ -42,9 +47,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         </button>
 
         <button
-          onClick={() => setShowSocialShare(true)}
+          onClick={isMobile ? onNativeShare : () => setShowSocialShare(true)}
           className="flex-1 flex items-center justify-center p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-bold shadow-2xl hover:shadow-blue-300/50 transform hover:-translate-y-1 hover:scale-105"
-          title={t("share")}
+          title={isMobile ? t("shareNative") : t("share")}
         >
           <Share2 className="w-6 h-6 drop-shadow-sm" />
         </button>
