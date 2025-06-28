@@ -49,6 +49,7 @@ export const TRANSLATIONS: Translations = {
     customizeQR: "Customize QR",
     hideCustomization: "Hide Customization",
     showCustomization: "Show Customization",
+    generatedQRCode: "Generated QR Code",
   },
   "es-ES": {
     appTitle: "Generador de Códigos QR",
@@ -100,5 +101,6 @@ export const TRANSLATIONS: Translations = {
     customizeQR: "Personalizar QR",
     hideCustomization: "Ocultar Personalización",
     showCustomization: "Mostrar Personalización",
+    generatedQRCode: "Código QR Generado",
   },
 };

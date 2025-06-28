@@ -64,6 +64,7 @@ export interface Translation {
   customizeQR: string;
   hideCustomization: string;
   showCustomization: string;
+  generatedQRCode: string;
 }
 
 export type Locale = "en-US" | "es-ES";

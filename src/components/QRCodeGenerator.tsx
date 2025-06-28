@@ -8,7 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { TabNavigation } from "./TabNavigation";
+// import { TabNavigation } from "./TabNavigation"; // No longer needed - integrated directly
 import { URLInput } from "./URLInput";
 import { TextInput } from "./TextInput";
 import { ContactInput } from "./ContactInput";
@@ -159,50 +159,96 @@ const QRCodeGenerator: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl shadow-orange-200/30 overflow-hidden border-2 border-white/50 relative">
+        <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl shadow-orange-200/30 overflow-hidden border-2 border-white/50 relative min-h-[700px]">
           {/* Glassmorphism overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
 
-          <TabNavigation
-            tabs={tabs}
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
+          <div className="flex h-full">
+            {/* Vertical Sidebar with Tabs */}
+            <div className="w-64 h-full">
+              <div className="h-full bg-gradient-to-b from-rose-50/50 to-amber-50/50 backdrop-blur-sm border-r-2 border-orange-100/50">
+                <nav className="flex flex-col">
+                  {/* Content Tabs */}
+                  {tabs.map((tab) => {
+                    const IconComponent = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id as TabType)}
+                        className={`flex items-center gap-4 px-6 py-6 text-left font-bold transition-all duration-300 transform ${
+                          activeTab === tab.id
+                            ? "text-orange-600 border-r-4 border-orange-500 bg-gradient-to-r from-orange-50 to-white scale-105 shadow-lg"
+                            : "text-slate-600 hover:text-orange-600 hover:bg-gradient-to-r hover:from-orange-25 hover:to-white/50 hover:scale-102"
+                        }`}
+                      >
+                        <IconComponent
+                          className={`w-6 h-6 ${
+                            activeTab === tab.id ? "drop-shadow-sm" : ""
+                          }`}
+                        />
+                        <span className="tracking-wide text-lg">
+                          {tab.label}
+                        </span>
+                      </button>
+                    );
+                  })}
 
-          <div className="p-10 lg:p-12">
-            <div className="flex gap-8">
-              {/* Main Content Area */}
-              <div
-                className={`flex-1 transition-all duration-300 ${
-                  isCustomizationOpen ? "lg:mr-80" : ""
-                }`}
-              >
-                <div className="grid lg:grid-cols-2 gap-12">
+                  {/* Divider */}
+                  <div className="mx-6 my-4 border-t border-orange-200/50"></div>
+
+                  {/* Customization Toggle - Special styling */}
+                  <button
+                    onClick={() => setIsCustomizationOpen(!isCustomizationOpen)}
+                    className={`relative flex items-center gap-4 px-6 py-6 text-left font-bold transition-all duration-300 transform overflow-hidden ${
+                      isCustomizationOpen
+                        ? "text-white border-r-4 border-orange-500 bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 scale-105 shadow-xl"
+                        : "text-orange-700 hover:text-white hover:bg-gradient-to-r hover:from-orange-400 hover:via-orange-500 hover:to-amber-500 hover:scale-102 bg-gradient-to-r from-orange-100/80 to-amber-100/80 shadow-md hover:shadow-lg"
+                    }`}
+                  >
+                    {/* Subtle pattern overlay for extra flair */}
+                    <div
+                      className={`absolute inset-0 opacity-10 ${
+                        isCustomizationOpen ? "bg-white" : "bg-orange-200"
+                      }`}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent"></div>
+                    </div>
+
+                    <Settings
+                      className={`w-6 h-6 relative z-10 ${
+                        isCustomizationOpen
+                          ? "drop-shadow-sm animate-pulse"
+                          : ""
+                      }`}
+                    />
+                    <span className="tracking-wide text-lg relative z-10">
+                      {t("customization")}
+                    </span>
+                    {isCustomizationOpen ? (
+                      <ChevronRight className="w-4 h-4 ml-auto relative z-10" />
+                    ) : (
+                      <ChevronLeft className="w-4 h-4 ml-auto relative z-10" />
+                    )}
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            <div
+              className={`flex-1 transition-all duration-300 ${
+                isCustomizationOpen ? "lg:mr-80" : ""
+              }`}
+            >
+              <div className="p-10 lg:p-12 h-full">
+                <div className="grid lg:grid-cols-2 gap-12 h-full">
                   {/* Input Section */}
                   <div className="space-y-8">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
-                        {activeTab === "url" && t("enterUrl")}
-                        {activeTab === "text" && t("enterText")}
-                        {activeTab === "contact" && t("contactInformation")}
-                      </h2>
-
-                      {/* Customization Toggle */}
-                      <button
-                        onClick={() =>
-                          setIsCustomizationOpen(!isCustomizationOpen)
-                        }
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 rounded-xl hover:from-orange-200 hover:to-amber-200 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
-                      >
-                        <Settings className="w-4 h-4" />
-                        <span className="text-sm">{t("customizeQR")}</span>
-                        {isCustomizationOpen ? (
-                          <ChevronRight className="w-4 h-4" />
-                        ) : (
-                          <ChevronLeft className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
+                    <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
+                      {activeTab === "url" && t("enterUrl")}
+                      {activeTab === "text" && t("enterText")}
+                      {activeTab === "contact" && t("contactInformation")}
+                    </h2>
 
                     {renderTabContent()}
 
@@ -215,7 +261,7 @@ const QRCodeGenerator: React.FC = () => {
                   </div>
 
                   {/* QR Code Display Section */}
-                  <div>
+                  <div className="flex flex-col">
                     <QRCodeDisplay
                       qrData={qrData}
                       qrContainerRef={qrContainerRef}
@@ -230,41 +276,41 @@ const QRCodeGenerator: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Collapsible Customization Panel */}
-              <div
-                className={`fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-lg border-l-2 border-orange-100/50 shadow-2xl transform transition-all duration-300 z-50 ${
-                  isCustomizationOpen ? "translate-x-0" : "translate-x-full"
-                }`}
-              >
-                <div className="p-6 h-full overflow-y-auto">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-slate-800 tracking-tight">
-                      {t("customization")}
-                    </h3>
-                    <button
-                      onClick={() => setIsCustomizationOpen(false)}
-                      className="p-2 rounded-lg hover:bg-orange-100 transition-colors"
-                    >
-                      <ChevronRight className="w-5 h-5 text-slate-600" />
-                    </button>
-                  </div>
-
-                  <QRCustomizationComponent
-                    customization={customization}
-                    onChange={setCustomization}
-                  />
-                </div>
-              </div>
-
-              {/* Overlay when panel is open on mobile */}
-              {isCustomizationOpen && (
-                <div
-                  className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
-                  onClick={() => setIsCustomizationOpen(false)}
-                />
-              )}
             </div>
+
+            {/* Collapsible Customization Panel */}
+            <div
+              className={`fixed right-0 top-0 h-full w-80 bg-white/95 backdrop-blur-lg border-l-2 border-orange-100/50 shadow-2xl transform transition-all duration-300 z-50 ${
+                isCustomizationOpen ? "translate-x-0" : "translate-x-full"
+              }`}
+            >
+              <div className="p-6 h-full overflow-y-auto">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-slate-800 tracking-tight">
+                    {t("customization")}
+                  </h3>
+                  <button
+                    onClick={() => setIsCustomizationOpen(false)}
+                    className="p-2 rounded-lg hover:bg-orange-100 transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5 text-slate-600" />
+                  </button>
+                </div>
+
+                <QRCustomizationComponent
+                  customization={customization}
+                  onChange={setCustomization}
+                />
+              </div>
+            </div>
+
+            {/* Overlay when panel is open on mobile */}
+            {isCustomizationOpen && (
+              <div
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+                onClick={() => setIsCustomizationOpen(false)}
+              />
+            )}
           </div>
         </div>
 
