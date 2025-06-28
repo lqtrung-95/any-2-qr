@@ -7,6 +7,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Menu,
+  X,
 } from "lucide-react";
 // import { TabNavigation } from "./TabNavigation"; // No longer needed - integrated directly
 import { URLInput } from "./URLInput";
@@ -30,6 +32,7 @@ const QRCodeGenerator: React.FC = () => {
   const [urlInput, setUrlInput] = useState("");
   const [textInput, setTextInput] = useState("");
   const [isCustomizationOpen, setIsCustomizationOpen] = useState(true);
+
   const [contactInfo, setContactInfo] = useState<ContactInfo>({
     firstName: "",
     lastName: "",
@@ -223,9 +226,9 @@ const QRCodeGenerator: React.FC = () => {
 
           <div className="flex h-full">
             {/* Vertical Sidebar with Tabs */}
-            <div className="w-64 h-full">
+            <div className="w-16 lg:w-64 h-full transition-all duration-300">
               <div className="h-full bg-gradient-to-b from-rose-50/50 to-amber-50/50 backdrop-blur-sm border-r-2 border-orange-100/50">
-                <nav className="flex flex-col">
+                <nav className="flex flex-col pt-8">
                   {/* Content Tabs */}
                   {tabs.map((tab) => {
                     const IconComponent = tab.icon;
@@ -233,7 +236,7 @@ const QRCodeGenerator: React.FC = () => {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as TabType)}
-                        className={`flex items-center gap-4 px-6 py-6 text-left font-bold transition-all duration-300 transform ${
+                        className={`flex items-center justify-center lg:justify-start px-4 py-6 lg:px-6 lg:py-6 transition-all duration-300 transform font-bold ${
                           activeTab === tab.id
                             ? "text-orange-600 border-r-4 border-orange-500 bg-gradient-to-r from-orange-50 to-white scale-105 shadow-lg"
                             : "text-slate-600 hover:text-orange-600 hover:bg-gradient-to-r hover:from-orange-25 hover:to-white/50 hover:scale-102"
@@ -244,7 +247,7 @@ const QRCodeGenerator: React.FC = () => {
                             activeTab === tab.id ? "drop-shadow-sm" : ""
                           }`}
                         />
-                        <span className="tracking-wide text-lg">
+                        <span className="hidden lg:block ml-4 tracking-wide text-lg">
                           {tab.label}
                         </span>
                       </button>
@@ -252,12 +255,12 @@ const QRCodeGenerator: React.FC = () => {
                   })}
 
                   {/* Divider */}
-                  <div className="mx-6 my-4 border-t border-orange-200/50"></div>
+                  <div className="my-4 border-t border-orange-200/50 mx-4 lg:mx-6"></div>
 
                   {/* Customization Toggle - Special styling */}
                   <button
                     onClick={() => setIsCustomizationOpen(!isCustomizationOpen)}
-                    className={`relative flex items-center gap-4 px-6 py-6 text-left font-bold transition-all duration-300 transform overflow-hidden ${
+                    className={`relative flex items-center justify-center lg:justify-start px-4 py-6 lg:px-6 lg:py-6 font-bold transition-all duration-300 transform overflow-hidden ${
                       isCustomizationOpen
                         ? "text-white border-r-4 border-orange-500 bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 scale-105 shadow-xl"
                         : "text-orange-700 hover:text-white hover:bg-gradient-to-r hover:from-orange-400 hover:via-orange-500 hover:to-amber-500 hover:scale-102 bg-gradient-to-r from-orange-100/80 to-amber-100/80 shadow-md hover:shadow-lg"
@@ -279,27 +282,29 @@ const QRCodeGenerator: React.FC = () => {
                           : ""
                       }`}
                     />
-                    <span className="tracking-wide text-lg relative z-10">
+                    <span className="hidden lg:block ml-4 tracking-wide text-lg relative z-10">
                       {t("customization")}
                     </span>
-                    {isCustomizationOpen ? (
-                      <ChevronRight className="w-4 h-4 ml-auto relative z-10" />
-                    ) : (
-                      <ChevronLeft className="w-4 h-4 ml-auto relative z-10" />
-                    )}
+                    <div className="hidden lg:block ml-auto relative z-10">
+                      {isCustomizationOpen ? (
+                        <ChevronRight className="w-4 h-4" />
+                      ) : (
+                        <ChevronLeft className="w-4 h-4" />
+                      )}
+                    </div>
                   </button>
                 </nav>
               </div>
             </div>
 
             {/* Main Content Area */}
-            <div
-              className={`flex-1 transition-all duration-300 ${
-                isCustomizationOpen ? "lg:mr-80" : ""
-              }`}
-            >
-              <div className="p-10 lg:p-12 h-full">
-                <div className="grid lg:grid-cols-2 gap-12 h-full">
+            <div className="flex-1 transition-all duration-300">
+              <div
+                className={`p-10 lg:p-12 transition-all duration-300 ${
+                  isCustomizationOpen ? "lg:pr-[21rem]" : ""
+                }`}
+              >
+                <div className="grid lg:grid-cols-2 gap-12">
                   {/* Input Section */}
                   <div className="space-y-8">
                     <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
@@ -324,6 +329,7 @@ const QRCodeGenerator: React.FC = () => {
                       qrData={qrData}
                       qrContainerRef={qrContainerRef}
                     />
+                    {/* Action Buttons - Back inside QR section for proper positioning */}
                     <div className="flex justify-center mt-8">
                       <ActionButtons
                         qrData={qrData}

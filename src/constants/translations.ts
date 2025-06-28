@@ -54,6 +54,7 @@ export const TRANSLATIONS: Translations = {
     shareQR: "Share QR Code",
     shareSuccess: "QR code shared successfully!",
     shareError: "Unable to share. QR code copied to clipboard instead.",
+    colorPresets: "Color Presets",
   },
   "es-ES": {
     appTitle: "Generador de Códigos QR",
@@ -110,5 +111,6 @@ export const TRANSLATIONS: Translations = {
     shareQR: "Compartir Código QR",
     shareSuccess: "¡Código QR compartido exitosamente!",
     shareError: "No se pudo compartir. Código QR copiado al portapapeles.",
+    colorPresets: "Presets de Color",
   },
 };

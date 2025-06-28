@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { Upload, X, Palette } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { Upload, X, Palette, ChevronDown, ChevronUp } from "lucide-react";
 import { QRCustomization } from "../types";
 import { useTranslation } from "../hooks/useTranslation";
 
@@ -14,6 +14,23 @@ export const QRCustomizationComponent: React.FC<QRCustomizationProps> = ({
 }) => {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showAllPresets, setShowAllPresets] = useState(false);
+
+  // Color presets
+  const colorPresets = [
+    { name: "Classic", foreground: "#000000", background: "#ffffff" },
+    { name: "Ocean", foreground: "#1e40af", background: "#dbeafe" },
+    { name: "Forest", foreground: "#166534", background: "#dcfce7" },
+    { name: "Sunset", foreground: "#dc2626", background: "#fef2f2" },
+    { name: "Purple", foreground: "#7c3aed", background: "#f3e8ff" },
+    { name: "Rose", foreground: "#be185d", background: "#fdf2f8" },
+    { name: "Amber", foreground: "#d97706", background: "#fffbeb" },
+    { name: "Teal", foreground: "#0f766e", background: "#f0fdfa" },
+    { name: "Indigo", foreground: "#4338ca", background: "#eef2ff" },
+    { name: "Emerald", foreground: "#059669", background: "#ecfdf5" },
+    { name: "Dark", foreground: "#ffffff", background: "#1f2937" },
+    { name: "Neon", foreground: "#10b981", background: "#000000" },
+  ];
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -52,8 +69,79 @@ export const QRCustomizationComponent: React.FC<QRCustomizationProps> = ({
     });
   };
 
+  const applyColorPreset = (preset: {
+    foreground: string;
+    background: string;
+  }) => {
+    onChange({
+      ...customization,
+      foregroundColor: preset.foreground,
+      backgroundColor: preset.background,
+    });
+  };
+
   return (
     <div className="space-y-6">
+      {/* Color Presets */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <label className="text-lg font-bold text-slate-700 tracking-wide">
+            <Palette className="w-5 h-5 inline mr-2" />
+            {t("colorPresets")}
+          </label>
+          {colorPresets.length > 3 && (
+            <button
+              onClick={() => setShowAllPresets(!showAllPresets)}
+              className="group flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-orange-600 hover:text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 hover:border-orange-300 transition-all duration-200 hover:shadow-sm"
+            >
+              {showAllPresets ? (
+                <>
+                  <span>Show less</span>
+                  <ChevronUp className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                </>
+              ) : (
+                <>
+                  <span>Show all ({colorPresets.length})</span>
+                  <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" />
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-3 gap-2">
+          {(showAllPresets ? colorPresets : colorPresets.slice(0, 3)).map(
+            (preset) => (
+              <button
+                key={preset.name}
+                onClick={() => applyColorPreset(preset)}
+                className={`relative p-3 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
+                  customization.foregroundColor === preset.foreground &&
+                  customization.backgroundColor === preset.background
+                    ? "border-orange-500 ring-2 ring-orange-200"
+                    : "border-slate-200 hover:border-orange-300"
+                }`}
+                title={preset.name}
+              >
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-6 h-6 rounded-lg border border-slate-300 shadow-sm"
+                    style={{ backgroundColor: preset.foreground }}
+                  />
+                  <div
+                    className="w-6 h-6 rounded-lg border border-slate-300 shadow-sm"
+                    style={{ backgroundColor: preset.background }}
+                  />
+                </div>
+                <div className="text-xs font-medium text-slate-600 mt-1 truncate">
+                  {preset.name}
+                </div>
+              </button>
+            )
+          )}
+        </div>
+      </div>
+
       {/* Color Pickers */}
       <div className="grid grid-cols-2 gap-6">
         <div>
@@ -165,8 +253,10 @@ export const QRCustomizationComponent: React.FC<QRCustomizationProps> = ({
             className="w-full h-3 bg-gradient-to-r from-orange-200 to-amber-200 rounded-full appearance-none cursor-pointer slider"
             style={{
               background: `linear-gradient(to right, #fed7aa 0%, #fde68a ${
-                customization.logoSize * 3.33
-              }%, #e5e7eb ${customization.logoSize * 3.33}%, #e5e7eb 100%)`,
+                ((customization.logoSize - 10) / (30 - 10)) * 100
+              }%, #e5e7eb ${
+                ((customization.logoSize - 10) / (30 - 10)) * 100
+              }%, #e5e7eb 100%)`,
             }}
           />
           <div className="flex justify-between text-sm text-slate-500 mt-1">

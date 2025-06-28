@@ -69,6 +69,7 @@ export interface Translation {
   shareQR: string;
   shareSuccess: string;
   shareError: string;
+  colorPresets: string;
 }
 
 export type Locale = "en-US" | "es-ES";
