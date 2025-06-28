@@ -30,7 +30,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       {/* Show social share modal only on desktop */}
       {!isMobile && (
         <SocialShare
-          qrData={qrData}
+          
           qrContainerRef={qrContainerRef}
           isOpen={showSocialShare}
           onClose={() => setShowSocialShare(false)}

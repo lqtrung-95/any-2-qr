@@ -70,6 +70,56 @@ const QRCodeGenerator: React.FC = () => {
     return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
+  // Decode URL params on initial load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q");
+
+    if (q) {
+      try {
+        const decodedParam = atob(q);
+        const { type, data } = JSON.parse(decodedParam);
+
+        if (type && data) {
+          setActiveTab(type);
+
+          if (type === "url") {
+            setUrlInput(data);
+          } else if (type === "text") {
+            setTextInput(data);
+          } else if (type === "contact") {
+            // Simplistic vCard parsing - assumes specific order/format
+            const lines = data.split('\n');
+            const contact: ContactInfo = { firstName: '', lastName: '', phone: '', email: '', organization: '', url: '' };
+            lines.forEach((line: string) => {
+              if (line.startsWith('FN:')) contact.firstName = line.substring(3);
+              if (line.startsWith('TEL:')) contact.phone = line.substring(4);
+              if (line.startsWith('EMAIL:')) contact.email = line.substring(6);
+              if (line.startsWith('ORG:')) contact.organization = line.substring(4);
+              if (line.startsWith('URL:')) contact.url = line.substring(4);
+            });
+            setContactInfo(contact);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse q:", error);
+      }
+    }
+  }, []);
+
+  // Encode data to URL params
+  useEffect(() => {
+    const newUrl = new URL(window.location.href);
+    if (qrData) {
+      const dataToEncode = JSON.stringify({ type: activeTab, data: qrData });
+      const encodedData = btoa(dataToEncode);
+      newUrl.searchParams.set("q", encodedData);
+    } else {
+      newUrl.searchParams.delete("q");
+    }
+    window.history.pushState({}, "", newUrl);
+  }, [qrData, activeTab]);
+
   const tabs: Tab[] = [
     { id: "url", label: t("urlTab"), icon: Link },
     { id: "text", label: t("textTab"), icon: MessageSquare },
@@ -118,12 +168,14 @@ const QRCodeGenerator: React.FC = () => {
 
   const handleCopy = async (): Promise<void> => {
     if (qrData) {
-      await navigator.clipboard.writeText(qrData);
+      await navigator.clipboard.writeText(window.location.href);
     }
   };
 
   const handleShare = async (): Promise<void> => {
     if (!qrData) return;
+
+    const shareUrl = window.location.href;
 
     // On mobile devices, use native share with image
     if (isMobile && navigator.share) {
@@ -139,7 +191,8 @@ const QRCodeGenerator: React.FC = () => {
 
                 const shareData = {
                   title: t("shareQR"),
-                  text: `${t("shareQR")}: ${qrData}`,
+                  text: t("shareQR"),
+                  url: shareUrl,
                   files: [file],
                 };
 
@@ -153,7 +206,8 @@ const QRCodeGenerator: React.FC = () => {
               // Fallback to sharing just text if file sharing isn't supported
               await navigator.share({
                 title: t("shareQR"),
-                text: qrData,
+                text: t("shareQR"),
+                url: shareUrl,
               });
             } catch (shareError: any) {
               // Don't throw error if user just canceled the share
@@ -161,14 +215,15 @@ const QRCodeGenerator: React.FC = () => {
                 return; // User canceled, this is normal
               }
               // For other errors, fallback to clipboard
-              await navigator.clipboard.writeText(qrData);
+              await navigator.clipboard.writeText(shareUrl);
             }
           }, "image/png");
         } else {
           // No canvas, share text only
           await navigator.share({
             title: t("shareQR"),
-            text: qrData,
+            text: t("shareQR"),
+            url: shareUrl,
           });
         }
       } catch (error: any) {
@@ -177,11 +232,11 @@ const QRCodeGenerator: React.FC = () => {
           return;
         }
         // Final fallback: copy to clipboard
-        await navigator.clipboard.writeText(qrData);
+        await navigator.clipboard.writeText(shareUrl);
       }
     } else {
       // On desktop, just copy to clipboard
-      await navigator.clipboard.writeText(qrData);
+      await navigator.clipboard.writeText(shareUrl);
     }
   };
 

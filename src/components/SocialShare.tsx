@@ -11,7 +11,6 @@ import {
 import { useTranslation } from "../hooks/useTranslation";
 
 interface SocialShareProps {
-  qrData: string;
   qrContainerRef: React.RefObject<HTMLDivElement>;
   isOpen: boolean;
   onClose: () => void;
@@ -19,7 +18,6 @@ interface SocialShareProps {
 }
 
 export const SocialShare: React.FC<SocialShareProps> = ({
-  qrData,
   qrContainerRef,
   isOpen,
   onClose,
@@ -59,14 +57,14 @@ export const SocialShare: React.FC<SocialShareProps> = ({
   };
 
   const shareToWhatsApp = () => {
-    const text = encodeURIComponent(`Check out this QR code: ${qrData}`);
+    const text = encodeURIComponent(`Check out this QR code: ${window.location.href}`);
     window.open(`https://wa.me/?text=${text}`, "_blank");
   };
 
   const shareToTelegram = () => {
-    const text = encodeURIComponent(`Check out this QR code: ${qrData}`);
+    const text = encodeURIComponent(`Check out this QR code: ${window.location.href}`);
     window.open(
-      `https://t.me/share/url?url=${encodeURIComponent(qrData)}&text=${text}`,
+      `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`,
       "_blank"
     );
   };
@@ -74,7 +72,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
   const shareToEmail = () => {
     const subject = encodeURIComponent(t("shareQR"));
     const imageDataUrl = getQRImageDataUrl();
-    let body = `Check out this QR code: ${qrData}\n\n`;
+    let body = `Check out this QR code: ${window.location.href}\n\n`;
 
     if (imageDataUrl) {
       body += `QR Code Image: ${imageDataUrl}`;
@@ -87,7 +85,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
   };
 
   const shareToTwitter = () => {
-    const text = encodeURIComponent(`Check out this QR code: ${qrData}`);
+    const text = encodeURIComponent(`Check out this QR code: ${window.location.href}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
   };
 
@@ -100,7 +98,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
             const file = new File([blob], "qr-code.png", { type: "image/png" });
             const shareData = {
               title: t("shareQR"),
-              text: `${t("shareQR")}: ${qrData}`,
+              text: `${t("shareQR")}: ${window.location.href}`,
               files: [file],
             };
 
@@ -188,7 +186,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
           <button
             onClick={() => {
               const text = encodeURIComponent(
-                `Check out this QR code: ${qrData}`
+                `Check out this QR code: ${window.location.href}`
               );
               window.open(`sms:?body=${text}`, "_blank");
             }}
@@ -204,11 +202,11 @@ export const SocialShare: React.FC<SocialShareProps> = ({
           <button
             onClick={() => {
               const text = encodeURIComponent(
-                `Check out this QR code: ${qrData}`
+                `Check out this QR code: ${window.location.href}`
               );
               window.open(
                 `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                  qrData
+                  window.location.href
                 )}`,
                 "_blank"
               );
