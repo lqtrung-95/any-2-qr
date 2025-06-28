@@ -198,10 +198,10 @@ const QRCodeGenerator: React.FC = () => {
                   type: "image/png",
                 });
 
+                // only share image if it supports sharing files
                 const shareData = {
                   title: t("shareQR"),
                   text: t("shareQR"),
-                  url: shareUrl,
                   files: [file],
                 };
 
