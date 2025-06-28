@@ -36,7 +36,7 @@ export const TRANSLATIONS: Translations = {
     copyData: "Copy Data",
     copied: "Copied!",
     qrCodeData: "QR Code Data:",
-    footerText: "Generate QR codes instantly • No data stored • Free to use",
+    footerText: "Instant QR code maker • Private & secure • Free to use",
     qrCodeAlt: "Generated QR Code",
     customization: "Customization",
     foregroundColor: "Foreground Color",
