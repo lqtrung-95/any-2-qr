@@ -80,10 +80,15 @@ export const createQRCanvas = (
       addLogoToCanvas(canvas, logoFile, logoSize);
     }
 
-    // Style the canvas
+    // Style the canvas - responsive sizing
     canvas.className = "w-full h-auto rounded-xl shadow-lg bg-white";
-    canvas.style.maxWidth = "300px";
+    canvas.style.maxWidth = "100%";
     canvas.style.height = "auto";
+
+    // Set max dimensions to prevent overflow on small screens
+    const containerWidth = container.clientWidth;
+    const maxSize = Math.min(containerWidth - 20, 300); // 10px padding on each side
+    canvas.style.maxWidth = `${maxSize}px`;
   } catch (error) {
     console.error("Error creating QR code:", error);
     throw error;

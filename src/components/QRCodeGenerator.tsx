@@ -235,14 +235,14 @@ const QRCodeGenerator: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-rose-500 via-orange-500 to-amber-500 rounded-[1.5rem] mb-8 shadow-2xl shadow-orange-200/50 transform hover:scale-110 hover:rotate-3 transition-all duration-500">
-            <QrCode className="w-12 h-12 text-white drop-shadow-lg" />
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gradient-to-br from-rose-500 via-orange-500 to-amber-500 rounded-[1rem] sm:rounded-[1.25rem] md:rounded-[1.5rem] mb-4 sm:mb-6 md:mb-8 shadow-xl sm:shadow-2xl shadow-orange-200/50 transform hover:scale-110 hover:rotate-3 transition-all duration-500">
+            <QrCode className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white drop-shadow-lg" />
           </div>
-          <h1 className="text-7xl lg:text-8xl font-black bg-gradient-to-r from-rose-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-6 tracking-tighter leading-none">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black bg-gradient-to-r from-rose-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-3 sm:mb-4 md:mb-6 tracking-tighter leading-none">
             {t("appTitle")}
           </h1>
-          <p className="text-slate-700 text-2xl font-semibold max-w-3xl mx-auto leading-relaxed drop-shadow-sm">
+          <p className="text-slate-700 text-lg sm:text-xl md:text-2xl font-semibold max-w-3xl mx-auto leading-relaxed drop-shadow-sm px-4">
             {t("appDescription")}
           </p>
         </div>
@@ -327,14 +327,14 @@ const QRCodeGenerator: React.FC = () => {
             {/* Main Content Area */}
             <div className="flex-1 transition-all duration-300">
               <div
-                className={`p-10 lg:p-12 transition-all duration-300 ${
+                className={`p-4 sm:p-6 md:p-8 lg:p-12 transition-all duration-300 ${
                   isCustomizationOpen ? "lg:pr-[21rem]" : ""
                 }`}
               >
-                <div className="grid lg:grid-cols-2 gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
                   {/* Input Section */}
-                  <div className="space-y-8">
-                    <h2 className="text-3xl font-bold text-slate-800 mb-6 tracking-tight">
+                  <div className="space-y-6 md:space-y-8">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 sm:mb-6 tracking-tight">
                       {activeTab === "url" && t("enterUrl")}
                       {activeTab === "text" && t("enterText")}
                       {activeTab === "contact" && t("contactInformation")}
@@ -344,20 +344,20 @@ const QRCodeGenerator: React.FC = () => {
 
                     <button
                       onClick={resetForm}
-                      className="w-full px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-2xl hover:from-slate-200 hover:to-slate-300 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                      className="w-full px-4 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 rounded-xl sm:rounded-2xl hover:from-slate-200 hover:to-slate-300 transition-all duration-300 font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                     >
                       {t("clearAllFields")}
                     </button>
                   </div>
 
                   {/* QR Code Display Section */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-center">
                     <QRCodeDisplay
                       qrData={qrData}
                       qrContainerRef={qrContainerRef}
                     />
                     {/* Action Buttons - Back inside QR section for proper positioning */}
-                    <div className="flex justify-center mt-8">
+                    <div className="flex justify-center w-full mt-6 sm:mt-8">
                       <ActionButtons
                         qrData={qrData}
                         qrContainerRef={qrContainerRef}

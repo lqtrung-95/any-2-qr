@@ -37,21 +37,21 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           onCopy={onCopy}
         />
       )}
-      <div className="flex gap-4 w-full max-w-sm">
+      <div className="flex gap-3 sm:gap-4 w-full max-w-sm">
         <button
           onClick={onDownload}
-          className="flex-1 flex items-center justify-center p-4 bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white rounded-2xl hover:from-rose-600 hover:via-orange-600 hover:to-amber-600 transition-all duration-300 font-bold shadow-2xl hover:shadow-orange-300/50 transform hover:-translate-y-1 hover:scale-105"
+          className="flex-1 flex items-center justify-center p-3 sm:p-4 bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white rounded-xl sm:rounded-2xl hover:from-rose-600 hover:via-orange-600 hover:to-amber-600 transition-all duration-300 font-bold shadow-xl sm:shadow-2xl hover:shadow-orange-300/50 transform hover:-translate-y-1 hover:scale-105"
           title={t("download")}
         >
-          <Download className="w-6 h-6 drop-shadow-sm" />
+          <Download className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm" />
         </button>
 
         <button
           onClick={isMobile ? onNativeShare : () => setShowSocialShare(true)}
-          className="flex-1 flex items-center justify-center p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-bold shadow-2xl hover:shadow-blue-300/50 transform hover:-translate-y-1 hover:scale-105"
+          className="flex-1 flex items-center justify-center p-3 sm:p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl sm:rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-bold shadow-xl sm:shadow-2xl hover:shadow-blue-300/50 transform hover:-translate-y-1 hover:scale-105"
           title={isMobile ? t("shareNative") : t("share")}
         >
-          <Share2 className="w-6 h-6 drop-shadow-sm" />
+          <Share2 className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm" />
         </button>
       </div>
     </>
